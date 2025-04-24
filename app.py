@@ -121,7 +121,17 @@ def logout():
 @login_required
 def dashboard():
     if is_admin():
-        return render_template('admin/dashboard.html')
+        book_count = Book.query.count()
+        user_count = User.query.count()
+        active_loans = BookLoan.query.filter_by(returned=False).count()
+        all_requests = BookRequest.query.order_by(BookRequest.requested_at.desc()).all()
+
+        return render_template('admin/dashboard.html',
+                               book_count=book_count,
+                               user_count=user_count,
+                               active_loans=active_loans,
+                               all_requests=all_requests)
+
     return render_template('user/dashboard.html')
 
 # Admin Routes
