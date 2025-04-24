@@ -1,24 +1,23 @@
-{% extends "base.html" %}
-
-{% block content %}
-<h2>Admin Paneli</h2>
-<div class="admin-menu">
-    <a href="{{ url_for('admin_books') }}" class="btn">Kitap Yönetimi</a>
-    <a href="{{ url_for('admin_users') }}" class="btn">Kullanıcı Yönetimi</a>
-</div>
-
-<div class="stats">
-    <div class="stat-card">
-        <h3>Toplam Kitap</h3>
-        <p>{{ book_count }}</p>
-    </div>
-    <div class="stat-card">
-        <h3>Toplam Kullanıcı</h3>
-        <p>{{ user_count }}</p>
-    </div>
-    <div class="stat-card">
-        <h3>Ödünçteki Kitaplar</h3>
-        <p>{{ active_loans }}</p>
-    </div>
-</div>
-{% endblock %}
+<h2>Tüm Kitap Ödünç Talepleri</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Kullanıcı</th>
+            <th>Kitap</th>
+            <th>Durum</th>
+            <th>İstek Tarihi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for req in all_requests %}
+        <tr>
+            <td>{{ req.id }}</td>
+            <td>{{ req.user_id }}</td>
+            <td>{{ req.book_id }}</td>
+            <td>{{ req.status }}</td>
+            <td>{{ req.requested_at.strftime('%d.%m.%Y %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
