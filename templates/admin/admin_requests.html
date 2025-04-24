@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1>Gelen Kitap Ödünç Talepleri</h1>
+    <p><strong>Toplam İstek:</strong> {{ total_requests }}</p>
 
     <table border="1">
         <thead>
@@ -28,9 +29,12 @@
                 <td>{{ req.requested_at.strftime('%d.%m.%Y %H:%M') }}</td>
                 <td>
                     {% if req.status == 'pending' %}
-                        <a href="{{ url_for('approve_request', request_id=req.id) }}">Onayla</a>
-                    {% else %}
+                        <a href="{{ url_for('approve_request', request_id=req.id) }}">Onayla</a> |
+                        <a href="{{ url_for('reject_request', request_id=req.id) }}">Reddet</a>
+                    {% elif req.status == 'approved' %}
                         Onaylandı
+                    {% elif req.status == 'rejected' %}
+                        Reddedildi
                     {% endif %}
                 </td>
             </tr>
