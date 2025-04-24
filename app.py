@@ -368,6 +368,19 @@ def approve_request(request_id):
     flash("İstek onaylandı!", "success")
     return redirect(url_for('view_requests'))
 
+@app.route('/admin/reject_request/<int:request_id>')
+@login_required
+def reject_request(request_id):
+    if not is_admin():
+        abort(403)
+    
+    req = BookRequest.query.get_or_404(request_id)
+    if req.status == 'pending':
+        req.status = 'rejected'
+        db.session.commit()
+        flash('İstek reddedildi.', 'info')
+    
+    return redirect(url_for('admin_requests'))
 
 if __name__ == '__main__':
     with app.app_context():
