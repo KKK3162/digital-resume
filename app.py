@@ -351,7 +351,8 @@ def view_requests():
         return redirect(url_for('dashboard'))
 
     requests = BookRequest.query.all()
-    return render_template('admin_requests.html', requests=requests)
+    total_requests = len(requests)
+    return render_template('admin/admin_requests.html', requests=requests, total_requests=total_requests)
 
 # Admin kitap talebini onaylar
 @app.route('/admin/approve_request/<int:request_id>')
