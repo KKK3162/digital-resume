@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <h1>Kütüphane Otomasyon Sistemine Hoş Geldiniz</h1>
+    <div class="actions">
+        {% if current_user.is_authenticated %}
+            {% if current_user.role == 'admin' %}
+                <a href="{{ url_for('admin_books') }}" class="btn btn-primary">Admin Paneli</a>
+            {% else %}
+                <a href="{{ url_for('search_books') }}" class="btn btn-primary">Kitap Ara</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="btn btn-secondary">Çıkış Yap</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-primary">Giriş Yap</a>
+            <a href="{{ url_for('register') }}" class="btn btn-secondary">Kayıt Ol</a>
+            <a href="{{ url_for('admin_register') }}" class="btn btn-admin">Admin Kaydı</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

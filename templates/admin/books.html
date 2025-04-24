@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-books">
+    <h1>Kitap Yönetimi</h1>
+    
+    <div class="add-book">
+        <h2>Yeni Kitap Ekle</h2>
+        
+        <form method="POST" action="{{ url_for('add_book') }}">
+            <div class="form-group">
+                <label>Kitap Adı</label>
+                <input type="text" name="title" required>
+            </div>
+            
+            <div class="form-group">
+                <label>ISBN</label>
+                <input type="text" name="isbn" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Yazar Adı</label>
+                <input type="text" name="author_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Yayın Yılı</label>
+                <input type="number" name="publication_year">
+            </div>
+            
+            <div class="form-group">
+                <label>Sayfa Sayısı</label>
+                <input type="number" name="page_count">
+            </div>
+            
+            <div class="form-group">
+                <label>Raf Numarası</label>
+                <input type="text" name="shelf_number">
+            </div>
+            
+            <button type="submit" class="btn">Kitap Ekle</button>
+        </form>
+    </div>
+    
+    <div class="book-list">
+        <h2>Kitap Listesi</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Kitap Adı</th>
+                    <th>Yazar</th>
+                    <th>ISBN</th>
+                    <th>Durum</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.id }}</td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author.name }}</td>
+                    <td>{{ book.isbn }}</td>
+                    <td>{{ 'Mevcut' if book.status == 'available' else 'Ödünç Alındı' }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_book', id=book.id) }}" class="btn btn-small">Düzenle</a>
+                        <form method="POST" action="{{ url_for('delete_book', book_id=book.id) }}" style="display: inline;">
+                            <button type="submit" class="btn btn-small btn-danger">Sil</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

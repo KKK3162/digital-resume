@@ -1,0 +1,49 @@
+stages:
+  - sync
+  - deploy
+
+variables:
+  GITHUB_REPO: "$GITHUB_REPO"
+  GITHUB_USERNAME: "$GITHUB_USERNAME"
+  GITHUB_TOKEN: "$GITHUB_TOKEN"
+  GITHUB_BRANCH: "$GITHUB_BRANCH"
+  AWS_ACCESS_KEY: "$AWS_ACCESS_KEY"
+  AWS_SECRET_KEY: "$AWS_SECRET_KEY"
+  AWS_USERNAME: "$AWS_USERNAME"
+  AWS_PUBLIC_IP: "$AWS_PUBLIC_IP"
+  DOCKER_IMAGE_NAME: "$DOCKER_IMAGE_NAME"
+
+sync_from_github:
+  stage: sync
+  script:
+    - git config --global user.email "$GITHUB_USERNAME@users.noreply.github.com"
+    - git config --global user.name "$GITHUB_USERNAME"
+    - |
+      if [ -d "/home/ec2-user/github-source/.git" ]; then
+        cd /home/ec2-user/github-source && git pull origin $GITHUB_BRANCH
+      else
+        git clone --branch $GITHUB_BRANCH https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/$GITHUB_REPO.git /home/ec2-user/github-source
+      fi
+    - ls -la /home/ec2-user/github-source
+
+deploy_to_aws:
+  stage: deploy
+  script:
+    - echo "$AWS_ACCESS_KEY" > aws_key.pem
+    - chmod 600 aws_key.pem
+    - >
+      ssh -o StrictHostKeyChecking=no -i aws_key.pem $AWS_USERNAME@$AWS_PUBLIC_IP "
+      if [ ! -d /home/ec2-user/github-source ]; then
+        git clone --branch $GITHUB_BRANCH https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/$GITHUB_REPO.git /home/ec2-user/github-source;
+      else
+        cd /home/ec2-user/github-source && git pull origin $GITHUB_BRANCH;
+      fi &&
+      cd /home/ec2-user/github-source &&
+      docker build -t $DOCKER_IMAGE_NAME . &&
+      CONTAINER_ID=\$(docker ps -aqf 'name=$DOCKER_IMAGE_NAME') &&
+      if [ ! -z \$CONTAINER_ID ]; then
+        docker stop \$CONTAINER_ID && docker rm \$CONTAINER_ID;
+      fi &&
+      docker ps -q --filter 'publish=5000' | xargs -r docker stop &&
+      docker ps -aq --filter 'publish=5000' | xargs -r docker rm &&
+      docker run -d -p 5000:5000 $DOCKER_IMAGE_NAME:latest"

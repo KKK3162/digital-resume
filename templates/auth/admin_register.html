@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-form">
+    <h2>Admin Kayıt</h2>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('admin_register') }}">
+        <div class="form-group">
+            <label>Admin Kayıt Kodu:</label>
+            <input type="password" name="secret_code" required>
+        </div>
+        <div class="form-group">
+            <label>Adınız:</label>
+            <input type="text" name="name" required>
+        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label>Şifre:</label>
+            <input type="password" name="password" required>
+        </div>
+        <button type="submit" class="btn">Admin Olarak Kayıt Ol</button>
+    </form>
+    
+    <div class="auth-links">
+        <a href="{{ url_for('login') }}">Giriş Sayfasına Dön</a>
+    </div>
+</div>
+{% endblock %}

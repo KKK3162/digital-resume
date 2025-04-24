@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Admin Paneli</h2>
+<div class="admin-menu">
+    <a href="{{ url_for('admin_books') }}" class="btn">Kitap Yönetimi</a>
+    <a href="{{ url_for('admin_users') }}" class="btn">Kullanıcı Yönetimi</a>
+</div>
+
+<div class="stats">
+    <div class="stat-card">
+        <h3>Toplam Kitap</h3>
+        <p>{{ book_count }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Toplam Kullanıcı</h3>
+        <p>{{ user_count }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Ödünçteki Kitaplar</h3>
+        <p>{{ active_loans }}</p>
+    </div>
+</div>
+{% endblock %}

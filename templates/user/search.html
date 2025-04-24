@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="search-container">
+    <h1>Kitap Ara</h1>
+    
+    <!-- Arama Formu -->
+    <form method="POST" action="{{ url_for('search_books') }}">
+        <div class="form-group">
+            <input type="text" name="query" placeholder="Arama yap..." required>
+        </div>
+        
+        <div class="form-group">
+            <select name="search_by">
+                <option value="title">Kitap Adı</option>
+                <option value="author">Yazar</option>
+                <option value="category">Kategori</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn">Ara</button>
+    </form>
+
+    <!-- Tüm Kitapları Göster Butonu -->
+    <form method="GET" action="{{ url_for('all_books') }}" style="margin-top: 10px;">
+        <button type="submit" class="btn btn-secondary">Tüm Kitapları Göster</button>
+    </form>
+    
+    {% if books %}
+    <div class="results" style="margin-top: 20px;">
+        <h2>Arama Sonuçları</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Kitap Adı</th>
+                    <th>Yazar</th>
+                    <th>Yayın Yılı</th>
+                    <th>Durum</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author.name }}</td>
+                    <td>{{ book.publication_year }}</td>
+                    <td>{{ 'Mevcut' if book.status == 'available' else 'Ödünç Alındı' }}</td>
+                    <td>
+                        {% if book.status == 'available' %}
+                        <form method="POST" action="{{ url_for('borrow_book', book_id=book.id) }}">
+                            <button type="submit" class="btn btn-small">Ödünç Al</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

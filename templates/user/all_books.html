@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Tüm Kitaplar</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Kitap Adı</th>
+            <th>Yazar</th>
+            <th>ISBN</th>
+            <th>Durum</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.id }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author.name }}</td>
+            <td>{{ book.isbn }}</td>
+            <td>{{ 'Mevcut' if book.status == 'available' else 'Ödünç Alındı' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

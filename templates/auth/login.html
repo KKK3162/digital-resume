@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-tabs">
+        <a href="{{ url_for('login') }}?type=user" class="{% if request.args.get('type', 'user') == 'user' %}active{% endif %}">Kullanıcı Girişi</a>
+        <a href="{{ url_for('login') }}?type=admin" class="{% if request.args.get('type') == 'admin' %}active{% endif %}">Admin Girişi</a>
+    </div>
+
+    <div class="auth-form">
+        <h2>{% if request.args.get('type') == 'admin' %}Admin{% else %}Kullanıcı{% endif %} Girişi</h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('login') }}">
+            {% if request.args.get('type') == 'admin' %}
+                <input type="hidden" name="admin_login" value="true">
+            {% endif %}
+            
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Şifre:</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn">Giriş Yap</button>
+        </form>
+
+        <div class="auth-links">
+            {% if request.args.get('type') == 'admin' %}
+                <a href="{{ url_for('admin_register') }}">Admin Kaydı</a>
+            {% else %}
+                <a href="{{ url_for('register') }}">Kullanıcı Kaydı</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

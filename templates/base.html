@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kütüphane Otomasyonu - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Kütüphane Otomasyonu</div>
+            <ul class="nav-links">
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('dashboard') }}">Panel</a></li>
+                    {% if current_user.role == 'admin' %}
+                        <li><a href="{{ url_for('admin_books') }}">Kitap Yönetimi</a></li>
+                        <li><a href="{{ url_for('admin_users') }}">Kullanıcılar</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('search_books') }}">Kitap Ara</a></li>
+                        <li><a href="{{ url_for('my_loans') }}">Ödünçlerim</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('logout') }}">Çıkış</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('index') }}">Ana Sayfa</a></li>
+                    <li><a href="{{ url_for('login') }}">Giriş</a></li>
+                    <li><a href="{{ url_for('register') }}">Kayıt</a></li>
+                    <li><a href="{{ url_for('admin_register') }}">Admin Kaydı</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Kütüphane Otomasyon Sistemi</p>
+    </footer>
+</body>
+</html>

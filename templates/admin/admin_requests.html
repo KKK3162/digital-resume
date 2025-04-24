@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kitap Talepleri</title>
+</head>
+<body>
+    <h1>Gelen Kitap Ödünç Talepleri</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Kullanıcı</th>
+                <th>Kitap</th>
+                <th>Durum</th>
+                <th>İstek Tarihi</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for req in requests %}
+            <tr>
+                <td>{{ req.id }}</td>
+                <td>{{ req.user_id }}</td>
+                <td>{{ req.book_id }}</td>
+                <td>{{ req.status }}</td>
+                <td>{{ req.requested_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                <td>
+                    {% if req.status == 'pending' %}
+                        <a href="{{ url_for('approve_request', request_id=req.id) }}">Onayla</a>
+                    {% else %}
+                        Onaylandı
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

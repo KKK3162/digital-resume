@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Hoş Geldiniz, {{ current_user.name }}</h2>
+
+<div class="user-actions">
+    <a href="{{ url_for('search_books') }}" class="btn">Kitap Ara</a>
+    <a href="{{ url_for('my_loans') }}" class="btn">Ödünç Aldıklarım</a>
+</div>
+
+<div class="quick-stats">
+    <div class="stat-card">
+        <h3>Aktif Ödünçler</h3>
+        <p>{{ active_loan_count }}</p>
+    </div>
+</div>
+{% endblock %}
